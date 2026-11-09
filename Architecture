@@ -1,0 +1,39 @@
+AetherHound/
+├── capture/           # Audio & RF recording
+│   ├── record_audio.py      # Legacy audio capture
+│   ├── live_audio.py        # Live microphone callback queue
+│   ├── rf_source.py         # RF backend abstraction (RTL-SDR, HackRF, simulated)
+│   └── record_rf.py         # RF baseline calibration
+├── dsp/               # Signal processing pipeline
+│   ├── pipeline.py          # Audio: bandpass + notches + STFT
+│   ├── patch_generator.py   # 64-frame patch slicing
+│   └── rf_pipeline.py       # RF: IQ -> dB spectrum, decimation, peak search
+├── train/             # Model training & calibration
+│   ├── model.py             # AudioAutoencoder architecture
+│   ├── run_training.py      # Training loop (15 epochs)
+│   └── calibrate_threshold.py  # 99.5th percentile threshold
+├── export/            # ONNX export
+│   └── export_onnx.py
+├── infer/             # Live detection engines
+│   ├── detector.py          # Audio: ONNX runtime + hysteresis + SQLite
+│   └── rf_detector.py       # RF: z-score baseline + peak freq + SQLite
+├── ui/                # Terminal dashboard
+│   ├── dashboard.py         # Legacy Rich Live split-screen UI
+│   ├── waterfall.py         # Truecolour RF waterfall
+│   └── alert.py             # Non-blocking buzzer thread
+├── deploy/            # Production runner
+│   └── run_app.py           # Live mic + RF, 30 FPS, waterfall, buzzer
+├── tests/             # Pytest validation
+│   ├── test_core.py         # Audio DSP + state machine
+│   └── test_rf.py           # RF spectrum + waterfall
+├── mock/              # Synthetic data generator
+│   └── generate_signals.py
+├── config.toml        # All hyperparameters (now actually parsed)
+├── config_loader.py   # Typed config loader
+├── requirements.txt   # Python dependencies
+├── requirements-rf.txt  # SDR dependencies (pyrtlsdr, pyhackrf)
+└── models/            # Trained artifacts (gitignored)
+    ├── autoencoder.pt
+    ├── autoencoder.onnx
+    ├── threshold.txt
+    └── rf_baseline.npz
